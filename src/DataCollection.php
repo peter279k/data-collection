@@ -137,6 +137,33 @@ class DataCollection implements \ArrayAccess, \Iterator
         }
     }
 
+    public function __set($name, $value)
+    {
+        throw new \Exception('');
+    }
+
+    public function __get($name)
+    {
+        if ($name === 'length') {
+            $this->updateData();
+            return sizeof($this->data);
+        }
+        throw new \Exception('');
+    }
+
+    public function __isset($name)
+    {
+        if ($name === 'length') {
+            return true;
+        }
+        throw new \Exception('');
+    }
+
+    public function __unset($name)
+    {
+        throw new \Exception('');
+    }
+
     public function __debugInfo()
     {
         return [$this->data];

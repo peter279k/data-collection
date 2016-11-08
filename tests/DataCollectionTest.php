@@ -30,6 +30,7 @@ class DataCollectionTest extends DataCollectionTestCase
         $this->assertTrue($collection[0]->value === 'a');
         $this->assertTrue($collection[1]->value === 'b');
         $this->assertTrue($collection[2]->value === 'c');
+        $this->assertTrue($collection->length === 3);
         foreach ($collection as $i => $object) {
             $this->assertTrue($object->value === $data[$i]['value']);
         }
