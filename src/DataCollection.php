@@ -146,24 +146,28 @@ class DataCollection implements \ArrayAccess, \Iterator
     {
         $this->actions[] = ['filter', $callback];
         $this->actionsVersion++;
+        return $this;
     }
 
     public function filterBy($property, $value)
     {
         $this->actions[] = ['filterBy', $property, $value];
         $this->actionsVersion++;
+        return $this;
     }
 
     public function sort($callback)
     {
         $this->actions[] = ['sort', $callback];
         $this->actionsVersion++;
+        return $this;
     }
 
     public function sortBy($property, $order = 'asc')
     {
         $this->actions[] = ['sortBy', $property, $order];
         $this->actionsVersion++;
+        return $this;
     }
 
     //length
