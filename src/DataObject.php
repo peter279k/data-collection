@@ -44,12 +44,12 @@ class DataObject implements \ArrayAccess
 
     public function offsetExists($offset)
     {
-        return $this->isPropertySet($offset);
+        return $this->isPropertyValueSet($offset);
     }
 
     public function offsetUnset($offset)
     {
-        $this->unsetProperty($offset);
+        $this->unsetPropertyValue($offset);
     }
 
     public function __get($name)
@@ -64,28 +64,18 @@ class DataObject implements \ArrayAccess
 
     public function __isset($name)
     {
-        return $this->isPropertySet($name);
+        return $this->isPropertyValueSet($name);
     }
 
     public function __unset($name)
     {
-        $this->unsetProperty($name);
-    }
-
-    private function getDynamicPropertyContext()
-    {
-        $context = new DataObject();
-        $context->object = $this;
-        $context->rawData = new DataObject($this->data);
-        return $context;
+        $this->unsetPropertyValue($name);
     }
 
     private function getProperty($name)
     {
         if (isset($this->properties[$name], $this->properties[$name][0])) {
-            $context = $this->getDynamicPropertyContext();
-            $context->propertyName = $name;
-            return call_user_func($this->properties[$name][0], $context);
+            return call_user_func($this->properties[$name][0]);
         }
         return isset($this->data[$name]) ? $this->data[$name] : null;
     }
@@ -93,29 +83,30 @@ class DataObject implements \ArrayAccess
     private function setProperty($name, $value)
     {
         if (isset($this->properties[$name], $this->properties[$name][1])) {
-            $context = $this->getDynamicPropertyContext();
-            $context->propertyName = $name;
-            $this->data[$name] = call_user_func($this->properties[$name][1], $value, $context);
+            $this->data[$name] = call_user_func($this->properties[$name][1], $value);
             return;
         }
         $this->data[$name] = $value;
     }
 
-    private function isPropertySet($name)
+    private function isPropertyValueSet($name)
     {
         return isset($this->data[$name]);
     }
 
-    private function unsetProperty($name)
+    private function unsetPropertyValue($name)
     {
         if (isset($this->data[$name])) {
             unset($this->data[$name]);
         }
     }
 
-    public function registerProperty($name, $getCallback, $setCallback)
+    public function defineProperty($name, $options = [])
     {
-        $this->properties[$name] = [$getCallback, $setCallback];
+        $this->properties[$name] = [
+            isset($options['get']) ? $options['get'] : null,
+            isset($options['set']) ? $options['set'] : null
+        ];
     }
 
 }

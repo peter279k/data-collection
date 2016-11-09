@@ -112,18 +112,21 @@ class DataObjectTest extends DataCollectionTestCase
     /**
      *
      */
-    public function testRegisterProperty()
+    public function testDefinProperty()
     {
         $object = new DataObject();
-        $object->registerProperty('property1', function($context) {
-            if ($context->rawData->property1 === null) {
-                return 'unknown';
-            } else {
-                return $context->rawData->property1;
+        $object->defineProperty('property1', [
+            'get' => function($context) {
+                if ($context->rawData->property1 === null) {
+                    return 'unknown';
+                } else {
+                    return $context->rawData->property1;
+                }
+            },
+            'set' => function($value) {
+                return $value + 1;
             }
-        }, function($value) {
-            return $value + 1;
-        });
+        ]);
         $this->assertTrue($object->property1 === 'unknown');
         $object->property1 = 10;
         $this->assertTrue($object->property1 === 11);
@@ -135,11 +138,14 @@ class DataObjectTest extends DataCollectionTestCase
     public function testDynamicPropertyContext()
     {
         $object = new DataObject();
-        $object->registerProperty('property1', function($context) {
-            return $context->rawData->property2;
-        }, function($value, $context) {
-            $context->object->property2 = $value;
-        });
+        $object->defineProperty('property1', [
+            'get' => function($context) {
+                return $context->rawData->property2;
+            },
+            'set' => function($value, $context) {
+                $context->object->property2 = $value;
+            }
+        ]);
         $object->property2 = 5;
         $this->assertTrue($object->property1 === 5);
         $object->property1 = 6;
