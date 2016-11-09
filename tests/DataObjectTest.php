@@ -112,45 +112,24 @@ class DataObjectTest extends DataCollectionTestCase
     /**
      *
      */
-    public function testDefinProperty()
+    public function testDefineProperty()
     {
         $object = new DataObject();
         $object->defineProperty('property1', [
-            'get' => function($context) {
-                if ($context->rawData->property1 === null) {
+            'get' => function() use ($object) {
+                if ($object->property1raw === null) {
                     return 'unknown';
                 } else {
-                    return $context->rawData->property1;
+                    return $object->property1raw;
                 }
             },
-            'set' => function($value) {
-                return $value + 1;
+            'set' => function($value) use ($object) {
+                $object->property1raw = $value;
             }
         ]);
         $this->assertTrue($object->property1 === 'unknown');
         $object->property1 = 10;
-        $this->assertTrue($object->property1 === 11);
-    }
-
-    /**
-     *
-     */
-    public function testDynamicPropertyContext()
-    {
-        $object = new DataObject();
-        $object->defineProperty('property1', [
-            'get' => function($context) {
-                return $context->rawData->property2;
-            },
-            'set' => function($value, $context) {
-                $context->object->property2 = $value;
-            }
-        ]);
-        $object->property2 = 5;
-        $this->assertTrue($object->property1 === 5);
-        $object->property1 = 6;
-        $this->assertTrue($object->property1 === 6);
-        $this->assertTrue($object->property2 === 6);
+        $this->assertTrue($object->property1 === 10);
     }
 
 }
