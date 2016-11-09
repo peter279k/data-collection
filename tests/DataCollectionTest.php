@@ -165,4 +165,60 @@ class DataCollectionTest extends DataCollectionTestCase
         $this->assertTrue($collection[2]->value === 'a');
     }
 
+    /**
+     *
+     */
+    public function testLength()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $this->assertTrue(isset($collection->length));
+        $collection->pop();
+        $this->assertTrue($collection->length === 2);
+    }
+
+    /**
+     *
+     */
+    public function testShiftAndUnshift()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $this->assertTrue($collection->length === 3);
+        $object = $collection->shift();
+        $this->assertTrue($object->value === 'a');
+        $this->assertTrue($collection->length === 2);
+        $collection->unshift(['value' => 'a']);
+        $this->assertTrue($collection[0]->value === 'a');
+        $this->assertTrue($collection->length === 3);
+    }
+
+    /**
+     *
+     */
+    public function testPopAndPush()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $this->assertTrue($collection->length === 3);
+        $object = $collection->pop();
+        $this->assertTrue($object->value === 'c');
+        $this->assertTrue($collection->length === 2);
+        $collection->push(['value' => 'c']);
+        $this->assertTrue($collection[2]->value === 'c');
+        $this->assertTrue($collection->length === 3);
+    }
+
 }

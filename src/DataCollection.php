@@ -31,15 +31,23 @@ class DataCollection implements \ArrayAccess, \Iterator
     public function __construct($data = [])
     {
         foreach ($data as $object) {
-            if ($object instanceof DataObject) {
-                $this->data[] = $object;
-            } elseif (is_array($object)) {
-                $this->data[] = new DataObject($object);
-            } else {
+            $object = $this->getDataObject($object);
+            if ($object === null) {
                 $this->data = [];
-                throw new \Exception('');
+                throw new Exception('');
             }
+            $this->data[] = $object;
         }
+    }
+
+    private function getDataObject($object)
+    {
+        if ($object instanceof DataObject) {
+            return $object;
+        } elseif (is_array($object)) {
+            return new DataObject($object);
+        }
+        return null;
     }
 
     public function offsetSet($offset, $value)
@@ -197,5 +205,32 @@ class DataCollection implements \ArrayAccess, \Iterator
         return $this;
     }
 
-    //length
+    public function unshift($object)
+    {
+        $object = $this->getDataObject($object);
+        if ($object === null) {
+            throw new Exception('');
+        }
+        array_unshift($this->data, $object);
+    }
+
+    public function shift()
+    {
+        return array_shift($this->data);
+    }
+
+    public function push($object)
+    {
+        $object = $this->getDataObject($object);
+        if ($object === null) {
+            throw new Exception('');
+        }
+        array_push($this->data, $object);
+    }
+
+    public function pop()
+    {
+        return array_pop($this->data);
+    }
+
 }
