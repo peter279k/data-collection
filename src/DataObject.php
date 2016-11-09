@@ -91,7 +91,7 @@ class DataObject implements \ArrayAccess
 
     private function isPropertyValueSet($name)
     {
-        return isset($this->data[$name]);
+        return isset($this->data[$name]) || isset($this->properties[$name]);
     }
 
     private function unsetPropertyValue($name)
