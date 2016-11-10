@@ -221,4 +221,72 @@ class DataCollectionTest extends DataCollectionTestCase
         $this->assertTrue($collection->length === 3);
     }
 
+    /**
+     *
+     */
+    public function testReverse()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->reverse();
+        $this->assertTrue($collection[0]->value === 'c');
+        $this->assertTrue($collection[1]->value === 'b');
+        $this->assertTrue($collection[2]->value === 'a');
+    }
+
+    /**
+     *
+     */
+    public function testMap()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->map(function($object) {
+            $object->value .= $object->value;
+            return $object;
+        });
+        $this->assertTrue($collection[0]->value === 'aa');
+        $this->assertTrue($collection[1]->value === 'bb');
+        $this->assertTrue($collection[2]->value === 'cc');
+    }
+
+    /**
+     *
+     */
+    public function testToArray()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $array = $collection->toArray();
+        $this->assertTrue($array === $data);
+    }
+
+    /**
+     *
+     */
+    public function testToJSON()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $json = $collection->toJSON();
+        $expectedResult = '[{"value":"a"},{"value":"b"},{"value":"c"}]';
+        $this->assertTrue($json === $expectedResult);
+    }
+
 }

@@ -140,8 +140,13 @@ class DataCollection implements \ArrayAccess, \Iterator
                     usort($this->data, function($object1, $object2) use ($action) {
                         return strcmp($object1[$action[1]], $object2[$action[1]]) * ($action[2] === 'asc' ? 1 : -1);
                     });
+                } elseif ($action[0] === 'reverse') {
+                    $this->data = array_reverse($this->data);
+                } elseif ($action[0] === 'map') {
+                    $this->data = array_map($action[1], $this->data);
                 }
             }
+            $this->dataVersion = $this->actionsVersion;
         }
     }
 
@@ -205,8 +210,23 @@ class DataCollection implements \ArrayAccess, \Iterator
         return $this;
     }
 
+    public function reverse()
+    {
+        $this->actions[] = ['reverse'];
+        $this->actionsVersion++;
+        return $this;
+    }
+
+    public function map($callback)
+    {
+        $this->actions[] = ['map', $callback];
+        $this->actionsVersion++;
+        return $this;
+    }
+
     public function unshift($object)
     {
+        $this->updateData();
         $object = $this->getDataObject($object);
         if ($object === null) {
             throw new Exception('');
@@ -216,11 +236,13 @@ class DataCollection implements \ArrayAccess, \Iterator
 
     public function shift()
     {
+        $this->updateData();
         return array_shift($this->data);
     }
 
     public function push($object)
     {
+        $this->updateData();
         $object = $this->getDataObject($object);
         if ($object === null) {
             throw new Exception('');
@@ -230,7 +252,23 @@ class DataCollection implements \ArrayAccess, \Iterator
 
     public function pop()
     {
+        $this->updateData();
         return array_pop($this->data);
+    }
+
+    public function toArray()
+    {
+        $this->updateData();
+        $result = [];
+        foreach ($this->data as $object) {
+            $result[] = $object->toArray();
+        }
+        return $result;
+    }
+
+    public function toJSON()
+    {
+        return json_encode($this->toArray());
     }
 
 }

@@ -132,4 +132,42 @@ class DataObjectTest extends DataCollectionTestCase
         $this->assertTrue($object->property1 === 10);
     }
 
+    /**
+     *
+     */
+    public function testToArray()
+    {
+        $object = new DataObject([
+            'property1' => 1
+        ]);
+        $object->defineProperty('property2', [
+            'get' => function() {
+                return 2;
+            }
+        ]);
+        $array = $object->toArray();
+        $this->assertTrue($array === [
+            'property1' => 1,
+            'property2' => 2
+        ]);
+    }
+
+    /**
+     *
+     */
+    public function testToJSON()
+    {
+        $object = new DataObject([
+            'property1' => 1
+        ]);
+        $object->defineProperty('property2', [
+            'get' => function() {
+                return 2;
+            }
+        ]);
+        $json = $object->toJSON();
+        $expectedResult = '{"property1":1,"property2":2}';
+        $this->assertTrue($json === $expectedResult);
+    }
+
 }

@@ -32,13 +32,13 @@ class DataObject implements \ArrayAccess
 
     public function offsetGet($offset)
     {
-        return $this->getProperty($offset);
+        return $this->getPropertyValue($offset);
     }
 
     public function offsetSet($offset, $value)
     {
         if (!is_null($offset)) {
-            $this->setProperty($offset, $value);
+            $this->setPropertyValue($offset, $value);
         }
     }
 
@@ -54,12 +54,12 @@ class DataObject implements \ArrayAccess
 
     public function __get($name)
     {
-        return $this->getProperty($name);
+        return $this->getPropertyValue($name);
     }
 
     public function __set($name, $value)
     {
-        $this->setProperty($name, $value);
+        $this->setPropertyValue($name, $value);
     }
 
     public function __isset($name)
@@ -72,7 +72,7 @@ class DataObject implements \ArrayAccess
         $this->unsetPropertyValue($name);
     }
 
-    private function getProperty($name)
+    private function getPropertyValue($name)
     {
         if (isset($this->properties[$name], $this->properties[$name][0])) {
             return call_user_func($this->properties[$name][0]);
@@ -80,7 +80,7 @@ class DataObject implements \ArrayAccess
         return isset($this->data[$name]) ? $this->data[$name] : null;
     }
 
-    private function setProperty($name, $value)
+    private function setPropertyValue($name, $value)
     {
         if (isset($this->properties[$name], $this->properties[$name][1])) {
             $this->data[$name] = call_user_func($this->properties[$name][1], $value);
@@ -107,6 +107,35 @@ class DataObject implements \ArrayAccess
             isset($options['get']) ? $options['get'] : null,
             isset($options['set']) ? $options['set'] : null
         ];
+    }
+
+    public function toArray()
+    {
+        $result = [];
+        foreach ($this->properties as $name => $temp) {
+            $value = $this->getPropertyValue($name);
+            if ($value instanceof \IvoPetkov\DataObject || $value instanceof \IvoPetkov\DataCollection) {
+                $result[$name] = $value->toArray();
+            } else {
+                $result[$name] = $value;
+            }
+        }
+        foreach ($this->data as $name => $value) {
+            if (array_key_exists($name, $result) === false) {
+                if ($value instanceof \IvoPetkov\DataObject || $value instanceof \IvoPetkov\DataCollection) {
+                    $result[$name] = $value->toArray();
+                } else {
+                    $result[$name] = $value;
+                }
+            }
+        }
+        ksort($result);
+        return $result;
+    }
+
+    public function toJSON()
+    {
+        return json_encode($this->toArray());
     }
 
 }
