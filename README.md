@@ -8,12 +8,43 @@ A familiar and powerful data collection abstraction for PHP
 [![License](https://poser.pugx.org/ivopetkov/data-collection/license)](https://packagist.org/packages/ivopetkov/data-collection)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/c9ad5d49897f4c209236225b7d0c1c1c)](https://www.codacy.com/app/ivo_2/data-collection)
 
+## Usage
+
+Create a objects collection from array
+```php
+$data = [
+    ['value' => 'a'],
+    ['value' => 'b'],
+    ['value' => 'c']
+];
+$collection = new DataCollection($data);
+
+// Can access the objects by index and get properties the following ways
+echo $collection[0]->value; // Output: a
+echo $collection[0]['value']; // Output: a
+
+// Can loop through the objects
+foreach($collection as $object){
+    echo $object->value;
+}
+
+```
+
+And here are same helpful methods to modify the collection
+```php
+$collection = new DataCollection([...]);
+$collection
+    ->filterBy('value', '...')
+    ->sortBy('value')
+    ->map(function($object){});
+
+```
+
 ## Install via Composer
 
 ```shell
 composer require ivopetkov/data-collection
 ```
-
 
 ## Documentation
 
