@@ -10,8 +10,10 @@ A familiar and powerful data collection abstraction for PHP
 
 ## Usage
 
-Create a objects collection from array
+Create an objects collection from array
 ```php
+use \IvoPetkov\DataCollection;
+
 $data = [
     ['value' => 'a'],
     ['value' => 'b'],
@@ -32,10 +34,12 @@ foreach($collection as $object){
 
 And here are same helpful methods to modify the collection
 ```php
+use \IvoPetkov\DataCollection;
+
 $collection = new DataCollection([...]);
 $collection
-    ->filterBy('value', '...')
-    ->sortBy('value')
+    ->filterBy('property1', '...')
+    ->sortBy('property2')
     ->map(function($object){});
 
 ```
