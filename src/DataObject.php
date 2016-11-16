@@ -197,7 +197,7 @@ class DataObject implements \ArrayAccess
     /**
      * Returns the object data converted as an array
      * 
-     * @return array
+     * @return array The object data converted as an array
      */
     public function toArray()
     {
@@ -226,7 +226,7 @@ class DataObject implements \ArrayAccess
     /**
      * Returns the object data converted as JSON
      * 
-     * @return string
+     * @return string The object data converted as JSON
      */
     public function toJSON()
     {

@@ -10,7 +10,7 @@
 namespace IvoPetkov;
 
 /**
- * 
+ * @property-read int $length The number of objects in the collection
  */
 class DataCollection implements \ArrayAccess, \Iterator
 {
@@ -453,7 +453,7 @@ class DataCollection implements \ArrayAccess, \Iterator
     /**
      * Returns the collection data converted as an array
      * 
-     * @return array
+     * @return array The collection data converted as an array
      */
     public function toArray()
     {
@@ -468,7 +468,7 @@ class DataCollection implements \ArrayAccess, \Iterator
     /**
      * Returns the collection data converted as JSON
      * 
-     * @return string
+     * @return string The collection data converted as JSON
      */
     public function toJSON()
     {
