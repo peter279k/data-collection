@@ -236,6 +236,13 @@ class DataCollectionTest extends DataCollectionTestCase
         $this->assertTrue($collection[0]->value === 'c');
         $this->assertTrue($collection[1]->value === 'b');
         $this->assertTrue($collection[2]->value === 'a');
+
+        $collection->push(['value' => 'd']);
+        $collection->reverse();
+        $this->assertTrue($collection[0]->value === 'd');
+        $this->assertTrue($collection[1]->value === 'a');
+        $this->assertTrue($collection[2]->value === 'b');
+        $this->assertTrue($collection[3]->value === 'c');
     }
 
     /**

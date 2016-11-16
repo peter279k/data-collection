@@ -9,6 +9,9 @@
 
 namespace IvoPetkov;
 
+/**
+ * 
+ */
 class DataObject implements \ArrayAccess
 {
 
@@ -18,6 +21,12 @@ class DataObject implements \ArrayAccess
      * @var array 
      */
     private $data = [];
+
+    /**
+     * The registered object properties
+     * 
+     * @var array 
+     */
     private $properties = [];
 
     /**
@@ -30,11 +39,21 @@ class DataObject implements \ArrayAccess
         $this->data = $data;
     }
 
+    /**
+     * 
+     * @param string $offset
+     * @return mixed
+     */
     public function offsetGet($offset)
     {
         return $this->getPropertyValue($offset);
     }
 
+    /**
+     * 
+     * @param string $offset
+     * @param mixed $value
+     */
     public function offsetSet($offset, $value)
     {
         if (!is_null($offset)) {
@@ -42,36 +61,69 @@ class DataObject implements \ArrayAccess
         }
     }
 
+    /**
+     * 
+     * @param string $offset
+     * @return boolean
+     */
     public function offsetExists($offset)
     {
         return $this->isPropertyValueSet($offset);
     }
 
+    /**
+     * 
+     * @param string $offset
+     */
     public function offsetUnset($offset)
     {
         $this->unsetPropertyValue($offset);
     }
 
+    /**
+     * 
+     * @param string $name
+     * @return mixed
+     */
     public function __get($name)
     {
         return $this->getPropertyValue($name);
     }
 
+    /**
+     * 
+     * @param string $name
+     * @param mixed $value
+     */
     public function __set($name, $value)
     {
         $this->setPropertyValue($name, $value);
     }
 
+    /**
+     * 
+     * @param string $name
+     * @return boolean
+     */
     public function __isset($name)
     {
         return $this->isPropertyValueSet($name);
     }
 
+    /**
+     * 
+     * @param string $name
+     */
     public function __unset($name)
     {
         $this->unsetPropertyValue($name);
     }
 
+    /**
+     * 
+     * @param string $name
+     * @return mixed
+     */
     private function getPropertyValue($name)
     {
         if (isset($this->properties[$name], $this->properties[$name][0])) {
@@ -80,6 +132,11 @@ class DataObject implements \ArrayAccess
         return isset($this->data[$name]) ? $this->data[$name] : null;
     }
 
+    /**
+     * 
+     * @param string $name
+     * @param mixed $value
+     */
     private function setPropertyValue($name, $value)
     {
         if (isset($this->properties[$name], $this->properties[$name][1])) {
@@ -89,11 +146,20 @@ class DataObject implements \ArrayAccess
         $this->data[$name] = $value;
     }
 
+    /**
+     * 
+     * @param string $name
+     * @return boolean
+     */
     private function isPropertyValueSet($name)
     {
         return isset($this->data[$name]) || isset($this->properties[$name]);
     }
 
+    /**
+     * 
+     * @param string $name
+     */
     private function unsetPropertyValue($name)
     {
         if (isset($this->data[$name])) {
@@ -101,14 +167,38 @@ class DataObject implements \ArrayAccess
         }
     }
 
+    /**
+     * Defines a new property
+     * 
+     * @param string $name The property name
+     * @param array $options The property options ['get'=>callable, 'set'=>callable]
+     * @throws \Exception
+     */
     public function defineProperty($name, $options = [])
     {
+        if (!is_string($name)) {
+            throw new \Exception('The name must be of type string');
+        }
+        if (!is_array($options)) {
+            throw new \Exception('The options must be of type array');
+        }
+        if (isset($options['get']) && !is_callable($options['get'])) {
+            throw new \Exception('The options get attribute must be of type callable');
+        }
+        if (isset($options['set']) && !is_callable($options['set'])) {
+            throw new \Exception('The options set attribute must be of type callable');
+        }
         $this->properties[$name] = [
             isset($options['get']) ? $options['get'] : null,
             isset($options['set']) ? $options['set'] : null
         ];
     }
 
+    /**
+     * Returns the object data converted as an array
+     * 
+     * @return array
+     */
     public function toArray()
     {
         $result = [];
@@ -133,6 +223,11 @@ class DataObject implements \ArrayAccess
         return $result;
     }
 
+    /**
+     * Returns the object data converted as JSON
+     * 
+     * @return string
+     */
     public function toJSON()
     {
         return json_encode($this->toArray());
