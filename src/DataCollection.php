@@ -440,7 +440,7 @@ class DataCollection implements \ArrayAccess, \Iterator
     }
 
     /**
-     * Pops an object off the end of collection
+     * Pops an object off the end of the collection
      * 
      * @return \IvoPetkov\DataObject|null Returns the poped object or null if the collection is empty
      */
@@ -448,6 +448,19 @@ class DataCollection implements \ArrayAccess, \Iterator
     {
         $this->update();
         return array_pop($this->data);
+    }
+
+    /**
+     * Extract a slice of the collection
+     * 
+     * @return \IvoPetkov\DataCollection Returns a slice of the collection
+     */
+    public function slice($offset, $length = null)
+    {
+        $this->update();
+        $slice = array_slice($this->data, $offset, $length);
+        $className = get_class($this);
+        return new $className($slice);
     }
 
     /**
