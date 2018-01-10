@@ -69,6 +69,81 @@ class DataCollectionTest extends DataCollectionTestCase
     /**
      *
      */
+    public function testOffsetSetWithInvalidOffsetType()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->offsetSet('invalid_offset', 'value');
+    }
+
+    /**
+     *
+     */
+    public function testOffsetSetWithNullValue()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->offsetSet(2, 'invalid_value');
+    }
+
+    /**
+     *
+     */
+    public function testOffsetExistsWithInvalidType()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->offsetExists('invalid_offset');
+    }
+
+    /**
+     *
+     */
+    public function testOffsetUnsetWithInvalidType()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->offsetUnset('invalid_offset');
+    }
+
+    /**
+     *
+     */
+    public function testOffsetGetWithInvalidType()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->offsetGet('invalid_offset');
+    }
+
+    /**
+     *
+     */
     public function testUnset()
     {
         $data = [
@@ -83,6 +158,96 @@ class DataCollectionTest extends DataCollectionTestCase
         unset($collection[1]);
         $this->assertTrue($collection[0]->value === 'a');
         $this->assertTrue($collection[1]->value === 'c');
+    }
+
+    /**
+     *
+     */
+    public function testSetWithInvalidProperty()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->name = 'name';
+    }
+
+    /**
+     *
+     */
+    public function testSetWithLengthIsReadonlyProperty()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->length = 5;
+    }
+
+    /**
+     *
+     */
+    public function testGetWithInvalidProperty()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $property = $collection->invalid_property;
+    }
+
+    /**
+     *
+     */
+    public function testIssetWithInvalidProperty()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $invalidIsset = isset($collection->invalid_property);
+    }
+
+    /**
+     *
+     */
+    public function testUnsetWithInvalidProperty()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        unset($collection->invalid_property);
+    }
+
+    /**
+     *
+     */
+    public function testUnsetWithReadonlyProperty()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        unset($collection->length);
     }
 
     /**
@@ -106,6 +271,21 @@ class DataCollectionTest extends DataCollectionTestCase
     /**
      *
      */
+    public function testFilterWithInvalidCallback()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->filter('invalid_callback');
+    }
+
+    /**
+     *
+     */
     public function testFilterBy()
     {
         $data = [
@@ -116,6 +296,21 @@ class DataCollectionTest extends DataCollectionTestCase
         $collection = new DataCollection($data);
         $collection->filterBy('value', 'c');
         $this->assertTrue($collection[0]->value === 'c');
+    }
+
+    /**
+     *
+     */
+    public function testFilterByWithInvalidPropertyType()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->filterBy(5, 'c');
     }
 
     /**
@@ -147,6 +342,21 @@ class DataCollectionTest extends DataCollectionTestCase
     /**
      *
      */
+    public function testSortWithInvalidCallback()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->sort('invalid_callback');
+    }
+
+    /**
+     *
+     */
     public function testSortBy()
     {
         $data = [
@@ -163,6 +373,36 @@ class DataCollectionTest extends DataCollectionTestCase
         $this->assertTrue($collection[0]->value === 'c');
         $this->assertTrue($collection[1]->value === 'b');
         $this->assertTrue($collection[2]->value === 'a');
+    }
+
+    /**
+     *
+     */
+    public function testSortByWithInvalidPropertyType()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->sortBy(5);
+    }
+
+    /**
+     *
+     */
+    public function testSortByWithInvalidOrder()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->sortBy('value', 'invalid_order');
     }
 
     /**
@@ -204,6 +444,21 @@ class DataCollectionTest extends DataCollectionTestCase
     /**
      *
      */
+    public function testUnshiftWithNullArgument()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->unshift(null);
+    }
+
+    /**
+     *
+     */
     public function testPopAndPush()
     {
         $data = [
@@ -219,6 +474,21 @@ class DataCollectionTest extends DataCollectionTestCase
         $collection->push(['value' => 'c']);
         $this->assertTrue($collection[2]->value === 'c');
         $this->assertTrue($collection->length === 3);
+    }
+
+    /**
+     *
+     */
+    public function testPushWithNullArgument()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->push(null);
     }
 
     /**
@@ -268,6 +538,35 @@ class DataCollectionTest extends DataCollectionTestCase
     /**
      *
      */
+    public function testMapWithInvalidCallback()
+    {
+        $this->setExpectedException('Exception');
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $collection->map('invalid_callback');
+    }
+
+    /**
+     *
+     */
+    public function testSlice()
+    {
+        $data = [
+            ['value' => 'a'],
+            ['value' => 'b'],
+            ['value' => 'c']
+        ];
+        $collection = new DataCollection($data);
+        $this->assertInstanceOf('\IvoPetkov\DataCollection', $collection->slice(0, 1));
+    }
+
+    /**
+     *
+     */
     public function testToArray()
     {
         $data = [
@@ -294,6 +593,15 @@ class DataCollectionTest extends DataCollectionTestCase
         $json = $collection->toJSON();
         $expectedResult = '[{"value":"a"},{"value":"b"},{"value":"c"}]';
         $this->assertTrue($json === $expectedResult);
+    }
+
+    /**
+     *
+     */
+    public function testInstanceDataWithNull()
+    {
+        $this->setExpectedException('Exception');
+        $collection = new DataCollection([null]);
     }
 
 }

@@ -135,6 +135,46 @@ class DataObjectTest extends DataCollectionTestCase
     /**
      *
      */
+    public function testDefinePropertyWithInvalidNameType()
+    {
+        $this->setExpectedException('Exception');
+        $object = new DataObject();
+        $object->defineProperty([], []);
+    }
+
+    /**
+     *
+     */
+    public function testDefinePropertyWithInvalidOptionsType()
+    {
+        $this->setExpectedException('Exception');
+        $object = new DataObject();
+        $object->defineProperty('property_name', 'invalid_options');
+    }
+
+    /**
+     *
+     */
+    public function testDefinePropertyWithInvalidOptionsSetAttribute()
+    {
+        $this->setExpectedException('Exception');
+        $object = new DataObject();
+        $object->defineProperty('property_name', ['set' => 'invalid_call']);
+    }
+
+    /**
+     *
+     */
+    public function testDefinePropertyWithInvalidOptionsGetAttribute()
+    {
+        $this->setExpectedException('Exception');
+        $object = new DataObject();
+        $object->defineProperty('property_name', ['get' => 'invalid_call']);
+    }
+
+    /**
+     *
+     */
     public function testToArray()
     {
         $object = new DataObject([
@@ -149,6 +189,30 @@ class DataObjectTest extends DataCollectionTestCase
         $this->assertTrue($array === [
             'property1' => 1,
             'property2' => 2
+        ]);
+    }
+
+    /**
+     *
+     */
+    public function testToArrayWithDataObjectInstance()
+    {
+        $object = new DataObject([
+            'property1' => new DataObject([
+                'property1' => 1
+            ])
+        ]);
+        $object->defineProperty('property2', [
+            'get' => function() {
+                return new DataObject([
+                    'property1' => 1
+                ]);
+            }
+        ]);
+        $array = $object->toArray();
+        $this->assertTrue($array === [
+            'property1' => ['property1' => 1],
+            'property2' => ['property1' => 1]
         ]);
     }
 
